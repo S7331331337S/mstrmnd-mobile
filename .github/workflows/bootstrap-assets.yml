@@ -23,23 +23,19 @@ jobs:
           for f in android-icon-background.png android-icon-foreground.png android-icon-monochrome.png favicon.png icon.png splash-icon.png; do
             echo "fetch $f"
             curl -fsSL -o "assets/images/$f" "$BASE/$f"
-            python3 - <<PY
-          import pathlib
-          p = pathlib.Path("assets/images/$f")
-          data = p.read_bytes()
-          if data[:8] != bytes.fromhex("89504e470d0a1a0a"):
-              raise SystemExit(f"{p} is not a PNG ({data[:8]!r})")
-          print(f"{p}: {len(data)} bytes, valid PNG")
-          PY
+            python3 -c "import pathlib,sys; p=pathlib.Path(sys.argv[1]); d=p.read_bytes(); assert d[:8]==bytes.fromhex('89504e470d0a1a0a'), p; print(p, len(d), 'bytes')" "assets/images/$f"
           done
-
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10
 
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+
+      - name: Enable pnpm via corepack
+        run: |
+          set -euo pipefail
+          corepack enable
+          corepack prepare pnpm@10.0.0 --activate
+          pnpm --version
 
       - name: Generate pnpm lockfile
         run: pnpm install --lockfile-only --ignore-scripts
