@@ -2,97 +2,60 @@
 @tailwind components;
 @tailwind utilities;
 
-/*
- * MSTRMND design tokens — mobile.
- *
- * Same architecture as the web brand system (apps/dashboard globals.css):
- * semantic CSS variables, one accent, monochrome everywhere else. The
- * accent inverts with theme instead of a fixed color — Platinum lifts off
- * Obsidian in dark mode, Ink grounds Paper in light mode. Never a second
- * hue in either mode.
- *
- * Colors are stored as "R G B" channel triples (no commas) so Tailwind's
- * `rgb(var(--x) / <alpha-value>)` pattern can drive opacity utilities,
- * e.g. `bg-accent/10`, `border-line/60`.
- *
- * Three layers, matching Tailwind's "system + manual" dark mode recipe:
- *   1. `:root`            — light defaults.
- *   2. `@media (prefers-color-scheme: dark)` — system default, skipped
- *      when `.light` is explicitly forced (NativeWind's "Paper" override).
- *   3. `.dark`             — explicit "Obsidian" override, wins regardless
- *      of system preference.
- */
-
+/* MSTRMND v1 — monochrome, light/dark first, no decorative color. */
 :root {
-  --background: 250 249 246; /* paper */
-  --surface: 255 255 255; /* card */
-  --surface-raised: 243 242 238; /* sheet / popover */
-  --muted: 238 236 230; /* secondary fills */
-
-  --foreground: 19 19 17; /* ink */
-  --foreground-muted: 90 90 84;
-  --foreground-subtle: 148 146 136;
-
-  --accent: 19 19 17; /* ink-on-paper — inverted platinum role */
-  --accent-foreground: 250 249 246;
-  --accent-dim: 19 19 17; /* paired with low alpha utilities, e.g. bg-accent-dim/[0.06] */
-
-  --line: 10 10 11; /* hairline base — used with low alpha */
-  --line-strong: 10 10 11;
-
-  --warning: 217 119 6;
-  --danger: 220 38 38;
-
-  --overlay: 10 10 11; /* scrim base for sheets/modals */
+  --background: 247 247 245;
+  --surface: 255 255 255;
+  --surface-raised: 241 241 239;
+  --foreground: 17 17 17;
+  --muted: 102 102 102;
+  --subtle: 150 150 150;
+  --line: 217 217 214;
+  --line-strong: 189 189 186;
+  --accent: 17 17 17;
+  --accent-foreground: 247 247 245;
+  --overlay: 0 0 0;
   color-scheme: light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
-    --background: 10 10 11; /* obsidian */
-    --surface: 17 17 19;
-    --surface-raised: 26 26 29;
-    --muted: 28 28 31;
-
-    --foreground: 232 232 230;
-    --foreground-muted: 154 154 159;
-    --foreground-subtle: 107 107 114;
-
-    --accent: 232 226 208; /* platinum */
-    --accent-foreground: 10 10 11;
-    --accent-dim: 232 226 208;
-
-    --line: 255 255 255;
-    --line-strong: 255 255 255;
-
-    --warning: 245 158 11;
-    --danger: 240 68 56;
-
+    --background: 5 5 5;
+    --surface: 11 11 11;
+    --surface-raised: 17 17 17;
+    --foreground: 245 245 245;
+    --muted: 163 163 163;
+    --subtle: 112 112 112;
+    --line: 41 41 41;
+    --line-strong: 68 68 68;
+    --accent: 245 245 245;
+    --accent-foreground: 5 5 5;
     --overlay: 0 0 0;
     color-scheme: dark;
   }
 }
 
 .dark {
-  --background: 10 10 11; /* obsidian */
-  --surface: 17 17 19;
-  --surface-raised: 26 26 29;
-  --muted: 28 28 31;
-
-  --foreground: 232 232 230;
-  --foreground-muted: 154 154 159;
-  --foreground-subtle: 107 107 114;
-
-  --accent: 232 226 208; /* platinum */
-  --accent-foreground: 10 10 11;
-  --accent-dim: 232 226 208;
-
-  --line: 255 255 255;
-  --line-strong: 255 255 255;
-
-  --warning: 245 158 11;
-  --danger: 240 68 56;
-
+  --background: 5 5 5;
+  --surface: 11 11 11;
+  --surface-raised: 17 17 17;
+  --foreground: 245 245 245;
+  --muted: 163 163 163;
+  --subtle: 112 112 112;
+  --line: 41 41 41;
+  --line-strong: 68 68 68;
+  --accent: 245 245 245;
+  --accent-foreground: 5 5 5;
   --overlay: 0 0 0;
   color-scheme: dark;
 }
+
+.light { color-scheme: light; }
+
+@layer components {
+  .m-card { @apply border border-line bg-surface; box-shadow: 0 8px 28px rgb(0 0 0 / 0.08); }
+  .dark .m-card { box-shadow: 0 8px 28px rgb(0 0 0 / 0.34), 0 0 18px rgb(255 255 255 / 0.025); }
+  .m-hairline { @apply border-b border-line; }
+}
+
+/* No glassmorphism in v1. Blur is not a brand primitive. */
